@@ -1,12 +1,21 @@
 const feedbackCount = document.querySelector('#feedback-count');
 const feedbackArea = document.querySelector('.feedback-section');
 const backTotop = document.querySelector('.top');
+let data = null;
 let count = 0;
 window.onload = async () => {
+  if (!data) {
+    feedbackArea.innerHTML = `<div class="fb">
+    <div class="fb-1">
+      Loading...
+    </div>
+  </div>`;
+  }
   const res = await fetch(
     'https://feedback-api.kalvium.community/api/feedbacks/'
   );
-  const data = await res.json();
+  data = await res.json();
+  feedbackArea.innerHTML = '';
   data.list.reverse().map(el => {
     if (el.data.text) {
       count++;
@@ -22,7 +31,6 @@ window.onload = async () => {
           second: '2-digit',
         })
         .replace(/(\d+)\/(\d+)\/(\d+)/, '$1/$2/$3');
-
       feedbackArea.innerHTML += `<div class="fb">
           <div class="fb-2">${count} - ${el.data.text}</div>
           <div class="fb-1">
